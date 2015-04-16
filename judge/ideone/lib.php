@@ -119,7 +119,6 @@ class judge_ideone extends judge_base
      * @return updated task
      */
     function judge() {
-
         $task = &$this->task;
 
     	// create client.
@@ -198,7 +197,6 @@ class judge_ideone extends judge_base
         $task->infostudent = get_string('ideonelogo', 'local_onlinejudge');
 
         $task->status = $status_ideone[$details['result']];
-
         if ($task->compileonly) {
             if ($task->status != ONLINEJUDGE_STATUS_COMPILATION_ERROR && $task->status != ONLINEJUDGE_STATUS_INTERNAL_ERROR) {
                 $task->status = ONLINEJUDGE_STATUS_COMPILATION_OK;

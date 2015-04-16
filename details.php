@@ -115,7 +115,7 @@ if (!$ajax) {
 }
 
 function format_compileroutput($string) {
-    return '<pre>'.htmlspecialchars($string).'</pre>';
+    return '<pre>'.$string.'</pre>';
 }
 
 function format_cpuusage($string) {

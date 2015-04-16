@@ -103,6 +103,7 @@ $string['status_help'] = 'Status indicates the results given by the online judge
 * Compilation Error - The compiler does not believe the code is correct. Grade is 0.
 * Compilation OK - If the assignment is set as <em>compile only</em>, and your code pass the compilation, then this status is returned. No grade.
 * Internal Error - The internal system is misconfigured or the judge does not work. Only administrator can solve this problem. No grade.
+* Fake answer - The assignment has no process and directly output the answer.
 * Memory-Limit Exceed - Your program has used up the maximum memory allowed. Grade is 0.
 * Multi-Status - There are more than one test case and the judge results of each test case are not unique. Check <em>information</em> for details. Grade is sum of all grades got from each passed test case.
 * Output-Limit Exceed - Your program has outputted too much. Check whether there is any infinite loop which keep outputting. Grade is 0.
@@ -125,3 +126,13 @@ $string['typeonlinejudge'] = 'Online Judge';
 $string['usefile'] = 'Testcase from files';
 $string['waitingforjudge'] = 'Waiting for judge';
 
+// add by britain 2015-03-31
+$string['statisticstestcase'] = 'Statistic of submission';
+$string['testcasegragh'] = 'Testcase passer gragh';
+$string['submissioncount'] = 'Total submission';
+$string['codelanguage'] = 'Program Language';
+$string['pastecode'] = 'Please paste your code';
+$string['submit'] = 'submit';
+$string['pasteformlabel'] = 'Please paste your code. The same as upload module';
+$string['passrate'] = 'Current Pass Rate';
+$string['allassignments'] = 'All Assignment of A Course Pass Rate';

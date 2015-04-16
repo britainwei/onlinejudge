@@ -102,6 +102,7 @@ $string['status_help'] = '状态是自动评测的结果。不同状态的含义
 * 编译错误 - 程序不能通过编译。得0分
 * 编译通过 - 只有作业被设置为只编译不评测时，才会出现这种状态。不评分
 * 错误答案 - 程序输出与标准答案不匹配。得0分
+* 答案造假 - 没有过程直接输出答案。得0分
 * 等待评测 - 您的程序正在队列中等待被评测，请稍候。如果这种状态持续的时间很长，则可能是系统内部出现问题。不评分
 * 多种状态 - 当有多组测试用例，且各组用例测试的结果不完全相同时，会得到这种状态。“信息”中会给出每组用例单独的评测结果。得分为所有用例得分的和
 * 非正常结束 - 程序退出时没有返回0。得0分
@@ -138,3 +139,16 @@ $string['typeonlinejudge'] = '在线评测';
 $string['usefile'] = '测试用例来自文件';
 $string['waitingforjudge'] = '等待评测结果';
 
+/**
+ * @author : britain
+ * @since 2015-03-25
+ **/
+$string['statisticstestcase'] = '答题情况统计';
+$string['testcasegragh'] = '测试用例通过人数统计图';
+$string['submissioncount'] = '总提交人数';
+$string['codelanguage'] = '请选择您的编程语言';
+$string['pastecode'] = '请粘贴待测试的代码';
+$string['submit'] = '提交';
+$string['pasteformlabel'] = '请粘贴您要提交评测的代码(效果与选择文件提交一样)';
+$string['passrate'] = '当前本题通过率';
+$string['allassignments'] = '当前课程所有作业通过率';
