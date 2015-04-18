@@ -105,13 +105,13 @@ if (isset ( $cases )) {
 	
 	$data = array (
 			'xaxis' => array (
-					'name' => '测试用例',
+					'name' => get_string('testcases', 'assignment_onlinejudge'),
 					'type' => 'category',
 					'data' => $xaxis 
 			),
 			'series' => array (
 					array (
-							'name' => '通过人数',
+							'name' => get_string('passercount', 'assignment_onlinejudge'),
 							'type' => 'bar',
 							'barMaxWidth'=> 40,
 							'data' => array_values ( $cases ) 
@@ -140,13 +140,13 @@ if (isset ( $tests )) {
 	}
 	$data1 = array (
 			'xaxis' => array (
-					'name' => 'OJ作业',
+					'name' => 'OJ assignment',
 					'type' => 'category',
 					'data' => $xdata
 			),
 			'series' => array (
 					array (
-							'name' => '通过率',
+							'name' => get_string('passrate', 'assignment_onlinejudge'),
 							'type' => 'bar',
 							'barMaxWidth'=> 40,
 							'data' => $ydata

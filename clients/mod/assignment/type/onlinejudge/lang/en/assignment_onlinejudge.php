@@ -134,5 +134,7 @@ $string['codelanguage'] = 'Program Language';
 $string['pastecode'] = 'Please paste your code';
 $string['submit'] = 'submit';
 $string['pasteformlabel'] = 'Please paste your code. The same as upload module';
+$string['passercount'] = 'Passer count';
 $string['passrate'] = 'Current Pass Rate';
 $string['allassignments'] = 'All Assignment of A Course Pass Rate';
+$string['checkdirectlyoutput'] = 'Directly print answer check';

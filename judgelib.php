@@ -581,10 +581,10 @@ function onlinejudge_get_testcase_submission_count($testcaseid) {
  */
 function onlinejudge_get_cource_assignments($courseid) {
 	global $DB;
-
-	return $DB->get_records( 'assignment', array (
+	
+	return $DB->get_records ( 'assignment', array (
 			'course' => $courseid,
-			'assignmenttype'=>'onlinejudge'
+			'assignmenttype' => 'onlinejudge' 
 	) );
 }
 
@@ -617,52 +617,28 @@ function onlinejudge_get_testcase_info($testcaseid) {
 function onlinejudge_get_pass_rate($assignmentid) {
 	global $DB;
 	
-	$total = onlinejudge_get_submissions_count ( $assignmentid );
-	if ($total == 0) {
-		return null;
-	}
-	
-	$sql = 'select k.userid, t.id, count(*) as amount
-			from {assignment_oj_testcases} t left join {assignment_oj_submissions} s
-			on t.id = s.testcase
-			left join {onlinejudge_tasks} k
-			on s.task = k.id
-			where s.latest = 1 and t.assignment = ? and status = ?
-			group by userid';
-	$tasks = $DB->get_records_sql ( $sql, array (
-			$assignmentid,
-			ONLINEJUDGE_STATUS_ACCEPTED 
+	$assigninfo = $DB->get_record ( "assignment", array (
+			'id' => $assignmentid 
 	) );
 	
+	$submissions = $DB->get_records ( "assignment_submissions", array (
+			'assignment' => $assignmentid 
+	) );
+	
+	$total = 0;
 	$count = 0;
-	if (! empty ( $tasks )) {
-		$testcasecount = $DB->count_records ( 'assignment_oj_testcases', array (
-				'assignment' => $assignmentid 
-		) );
-		foreach ( $tasks as $task ) {
-			if ($task->amount == $testcasecount) {
+	if(!empty($assigninfo) && !empty($submissions)) {
+		foreach ( $submissions as $submission ) {
+			$total ++;
+			if ($submission->grade == $assigninfo->grade) {
 				$count ++;
 			}
 		}
 	}
-	$rate = $count / $total;
-	return array($rate, $count, $total);
-}
-
-function onlinejudge_get_submissions_count($assignmentid) {
-	global $DB;
-	
-	$sql = 'select t.id, count(*) as amount  
-		from {assignment_oj_testcases} t left join {assignment_oj_submissions} s 
-		on t.id = s.testcase  
-		where latest = 1 and assignment = ? 
-		group by t.id';
-	$items = $DB->get_records_sql ( $sql, array (
-			$assignmentid 
-	) );
-	
-	if (! empty ( $items )) {
-		return current ( $items )->amount;
+	if ($total != 0) {
+		$rate = $count / $total;
+	} else {
+		$rate = 0;
 	}
-	return 0;
+	return array ($rate, $count, $total);
 }

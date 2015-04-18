@@ -140,15 +140,32 @@ class Echarts {
 					                optionToContent: function(opt) {
 					                    var axisData = opt.xAxis[0].data;
 					                    var series = opt.series;
-					                    var table = '<table style="width:100%;text-align:center"><tbody><tr>'
-					                                 + '<td>$xname</td>'
+					                    var table = '<table style="width:100%;text-align:center"><tbody><tr>';
+					                    if('$xname' == 'OJ assignment') {
+					                    	table += '<td>$xname</td>'
+					                                 + '<td>通过人数</td>'
+					                                 + '<td>提交人数</td>'
 					                                 + '<td>' + series[0].name + '</td>'
 					                                 + '</tr>';
-					                    for (var i = 0, l = axisData.length; i < l; i++) {
-					                        table += '<tr style="border-bottom:#e5e5e5 solid 1px">'
-					                                 + '<td>' + axisData[i] + '</td>'
-					                                 + '<td>' + series[0].data[i] + '</td>'
+						                    for (var i = 0, l = axisData.length; i < l; i++) {
+						                    	var element = axisData[i].split(/[\(|\)|/]/);
+						                        table += '<tr style="border-bottom:#e5e5e5 solid 1px">'
+						                                 + '<td>' + element[0] + '</td>'
+						                                 + '<td>' + element[1] + '</td>'
+						                                 + '<td>' + element[2] + '</td>'
+						                                 + '<td>' + series[0].data[i] + '</td>'
+						                                 + '</tr>';
+					                    	}
+					                    } else {
+					                    	table += '<td>$xname</td>'
+					                                 + '<td>' + series[0].name + '</td>'
 					                                 + '</tr>';
+						                    for (var i = 0, l = axisData.length; i < l; i++) {
+						                        table += '<tr style="border-bottom:#e5e5e5 solid 1px">'
+						                                 + '<td>' + axisData[i] + '</td>'
+						                                 + '<td>' + series[0].data[i] + '</td>'
+						                                 + '</tr>';
+					                    	}
 					                    }
 					                    table += '</tbody></table>';
 					                    return table;

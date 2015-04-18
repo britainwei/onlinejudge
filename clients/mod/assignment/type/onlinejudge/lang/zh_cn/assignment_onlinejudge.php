@@ -150,5 +150,7 @@ $string['codelanguage'] = '请选择您的编程语言';
 $string['pastecode'] = '请粘贴待测试的代码';
 $string['submit'] = '提交';
 $string['pasteformlabel'] = '请粘贴您要提交评测的代码(效果与选择文件提交一样)';
+$string['passercount'] = '通过人数'; 
 $string['passrate'] = '当前本题通过率';
 $string['allassignments'] = '当前课程所有作业通过率';
+$string['checkdirectlyoutput'] = '直接printf答案检测';

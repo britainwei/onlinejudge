@@ -98,6 +98,10 @@ class assignment_onlinejudge extends assignment_upload {
 		$mform->addHelpButton ( 'var3', 'hideintro', 'assignment' );
 		$mform->setDefault ( 'var3', 0 );
 		
+		// check if directly output.
+		$mform->addElement ( 'select', 'var5', get_string ( 'checkdirectlyoutput', 'assignment_onlinejudge' ), $ynoptions );
+		$mform->setDefault ( 'var5', 0 );
+		
 		$mform->addElement ( 'select', 'emailteachers', get_string ( 'emailteachers', 'assignment' ), $ynoptions );
 		$mform->addHelpButton ( 'emailteachers', 'emailteachers', 'assignment' );
 		$mform->setDefault ( 'emailteachers', 0 );
@@ -620,10 +624,10 @@ class assignment_onlinejudge extends assignment_upload {
 		
 		// Pass rate
 		$tmp = onlinejudge_get_pass_rate ( $this->assignment->id );
-		if($tmp == null) {
-			$pass_rate = 'No submission';
-		} else {
+		if(!empty($tmp)) {
 			$pass_rate = $tmp[0]*100 . '% (' . $tmp[1] . '/' . $tmp[2] . ')';
+		} else {
+			$pass_rate = "null";
 		}
 		$item_name = get_string ( 'passrate', 'assignment_onlinejudge' ) . ':';
 		$table->data [] = array (
