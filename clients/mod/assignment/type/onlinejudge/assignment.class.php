@@ -445,7 +445,6 @@ class assignment_onlinejudge extends assignment_upload {
 					'userid' => $USER->id 
 			) ), $str, 'get' );
 			
-			// ================ add by britian ================
 			$paste_code_url = new moodle_url ( '/mod/assignment/type/onlinejudge/pastecode.php', array (
 					'contextid' => $this->context->id,
 					'userid' => $USER->id 
@@ -466,7 +465,6 @@ class assignment_onlinejudge extends assignment_upload {
 			echo " <select style='width:100px' name='codelanguage'>";
 			echo " <option value='c' selected>C</option>";
 			echo " </select><br/>";
-			// echo "<textarea name='paste_code' style='resize:none' row='20' col='30' wrap='hard'>";
 			echo "<textarea name='pastecode' style='resize:none;height:300px;width:90%;'>";
 			if (isset ( $code )) {
 				echo $code;
@@ -476,33 +474,6 @@ class assignment_onlinejudge extends assignment_upload {
 			echo "</form></div>";
 			echo $OUTPUT->box_end ();
 		}
-		// require_once ($CFG->dirroot . '/mod/assignment/type/onlinejudge/paste_form.php');
-		// $pasteform = new mod_assignment_paste_form ( null, array (
-		// 'contextid' => $this->context->id,
-		// 'userid' => $USER->id
-		// ) );
-		// if ($data = $pasteform->get_data ()) {
-		// echo var_dump($data);
-		// // $submission = $this->get_submission($USER->id, true); //create the submission if needed & its id
-		// // $data = file_postupdate_standard_editor($data, 'text', $editoroptions, $this->context, 'mod_assignment', $this->filearea, $submission->id);
-		
-		// // $submission = $this->update_submission($data);
-		
-		// //TODO fix log actions - needs db upgrade
-		// // add_to_log($this->course->id, 'assignment', 'upload', 'view.php?a='.$this->assignment->id, $this->assignment->id, $this->cm->id);
-		// // $this->email_teachers($submission);
-		
-		// //redirect to get updated submission date and word count
-		// // redirect(new moodle_url($PAGE->url, array('saved'=>1)));
-		// // $returnurl = new moodle_url ( '/mod/assignment/view.php', array ('id' => $this->cm->id) );
-		// // redirect($returnurl);
-		// } else {
-		// echo $OUTPUT->box_start ();
-		// $pasteform->display ();
-		// // $paste_code_url = new moodle_url ( '/mod/assignment/type/onlinejudge/pastecode.php', array ('contextid' => $this->context->id,'userid' => $USER->id, 'code_language' => 'welcome', 'paste_code' => "to"));
-		// // echo $OUTPUT->single_button ( $paste_code_url, get_string('submit', 'assignment_onlinejudge'), 'get' );
-		// echo $OUTPUT->box_end ();
-		// }
 	}
 	
 	/**

@@ -64,6 +64,9 @@ class Echarts {
 								case 'barMaxWidth' :
 									$tmp [] = $k . ':' . $v;
 									break;
+								case 'max' :
+									$tmp [] = $k . ':' . $v;
+									break;
 								case 'data' :
 									$tmp [] = $k . ':' . json_encode ( $v );
 							}

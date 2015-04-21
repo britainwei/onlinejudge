@@ -145,7 +145,7 @@ class judge_base {
 		if (strcmp ( $task->output, $task->stdout ) == 0) {
 			$status = ONLINEJUDGE_STATUS_ACCEPTED;
 			
-			if ($this->language == 11 && onlinejudge_is_direct_output ( $task )) {
+			if (whether_check_directly($task->id) && $this->language == 11 && onlinejudge_is_direct_output ( $task->id )) {
 				$status = ONLINEJUDGE_STATUS_FAKE_ANSWER;
 			}
 			return $status;
@@ -477,11 +477,42 @@ function onlinejudge_clean_temp_dir($content_only = true) {
 	remove_dir ( onlinejudge_get_temp_dir (), $content_only );
 }
 
-// judge if the code is directly output without calculate process.
-function onlinejudge_is_direct_output($task) {
+/**
+ * check whether judge directlyoutput or not.
+ *
+ * @param string $taskid
+ *        	id of task.
+ */
+function whether_check_directly($taskid) {
+	global $DB;
+	$sql = 'SELECT a.*  FROM 
+			{assignment} a LEFT JOIN {assignment_oj_testcases} t 
+			ON a.id = t.assignment 
+			LEFT JOIN {assignment_oj_submissions} s 
+			ON t.id = s.testcase 
+			LEFT JOIN {onlinejudge_tasks} ta 
+			ON s.task = ta.id 
+			where ta.id = ? ';
+	$value = $DB->get_record_sql ( $sql, array (
+			$taskid 
+	) );
+	if (empty ( $value ) || ($value->var5 == 0)) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
+/**
+ * judge if the code is directly output without calculate process.
+ *
+ * @param string $task
+ *        	id of task
+ */
+function onlinejudge_is_direct_output($taskid) {
 	// Get source code
 	$fs = get_file_storage ();
-	$files = $fs->get_area_files ( get_context_instance ( CONTEXT_SYSTEM )->id, 'local_onlinejudge', 'tasks', $task->id, 'sortorder, timemodified', false );
+	$files = $fs->get_area_files ( get_context_instance ( CONTEXT_SYSTEM )->id, 'local_onlinejudge', 'tasks', $taskid, 'sortorder, timemodified', false );
 	$source = '';
 	foreach ( $files as $file ) {
 		$source = $file->get_content ();
@@ -502,7 +533,9 @@ function onlinejudge_is_direct_output($task) {
 	return false;
 }
 
-// filter out invalid statement.
+/**
+ * filter out invalid statement.
+ */
 function filter($var) {
 	$result = false;
 	$tmp = trim ( $var );
@@ -627,7 +660,7 @@ function onlinejudge_get_pass_rate($assignmentid) {
 	
 	$total = 0;
 	$count = 0;
-	if(!empty($assigninfo) && !empty($submissions)) {
+	if (! empty ( $assigninfo ) && ! empty ( $submissions )) {
 		foreach ( $submissions as $submission ) {
 			$total ++;
 			if ($submission->grade == $assigninfo->grade) {
@@ -640,5 +673,9 @@ function onlinejudge_get_pass_rate($assignmentid) {
 	} else {
 		$rate = 0;
 	}
-	return array ($rate, $count, $total);
+	return array (
+			$rate,
+			$count,
+			$total 
+	);
 }
