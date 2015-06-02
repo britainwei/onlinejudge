@@ -162,12 +162,12 @@ class judge_base {
 						substr ( $task->stdout, 0, $position ),
 						"<span style='background:#FFFF00'>",
 						substr ( $task->stdout, $position ),
-						"</span>" 
+						"</span>", 
+						"<br/>"
 				);
 				$errorinfo = $errorinfo . join ( "", $array );
 			}
 			$task->compileroutput = $errorinfo;
-			
 			$tokens = array ();
 			$tok = strtok ( $task->output, " \n\r\t" );
 			while ( $tok !== false ) {
@@ -177,8 +177,9 @@ class judge_base {
 			
 			$tok = strtok ( $task->stdout, " \n\r\t" );
 			foreach ( $tokens as $anstok ) {
-				if ($tok === false || $tok !== $anstok)
+				if ($tok === false || $tok !== $anstok) {
 					return ONLINEJUDGE_STATUS_WRONG_ANSWER;
+				}
 				$tok = strtok ( " \n\r\t" );
 			}
 			

@@ -37,6 +37,7 @@ require_once ($CFG->dirroot . '/mod/assignment/type/upload/assignment.class.php'
 require_once ($CFG->libdir . '/filelib.php');
 require_once ($CFG->libdir . '/questionlib.php'); // for get_grade_options()
 require_once ($CFG->dirroot . '/local/onlinejudge/judgelib.php');
+require_once ('LogicalFaultLocation.php');
 
 /**
  * Extends the upload assignment class
@@ -595,15 +596,15 @@ class assignment_onlinejudge extends assignment_upload {
 		
 		// Pass rate
 		$tmp = onlinejudge_get_pass_rate ( $this->assignment->id );
-		if(!empty($tmp)) {
-			$pass_rate = $tmp[0]*100 . '% (' . $tmp[1] . '/' . $tmp[2] . ')';
+		if (! empty ( $tmp )) {
+			$pass_rate = $tmp [0] * 100 . '% (' . $tmp [1] . '/' . $tmp [2] . ')';
 		} else {
 			$pass_rate = "null";
 		}
 		$item_name = get_string ( 'passrate', 'assignment_onlinejudge' ) . ':';
 		$table->data [] = array (
 				$item_name,
-				"<span style='color:green'><b>".$pass_rate."</b></span>" 
+				"<span style='color:green'><b>" . $pass_rate . "</b></span>" 
 		);
 		
 		echo html_writer::table ( $table );
@@ -1023,16 +1024,18 @@ function onlinejudge_task_judged($task) {
 	$cm = get_coursemodule_from_instance ( 'assignment', $submission->assignment );
 	$ass = new assignment_onlinejudge ( $cm->id, NULL, $cm );
 	
-	$sql = 'SELECT s.*, t.subgrade
+	$sql = 'SELECT s.*, t.subgrade, t.input, t.output 
         FROM {assignment_oj_submissions} s LEFT JOIN {assignment_oj_testcases} t
         ON s.testcase = t.id
         WHERE s.submission = ? AND s.latest = 1';
+	
 	if (! $onlinejudges = $DB->get_records_sql ( $sql, array (
 			$submission->id 
 	) )) {
 		return true; // true means the event is processed. false will cause retry
 	}
-	
+	$inputs = array ();
+	$outputs = array ();
 	$finalgrade = 0;
 	foreach ( $onlinejudges as $oj ) {
 		if ($task = onlinejudge_get_task ( $oj->task )) {
@@ -1043,9 +1046,39 @@ function onlinejudge_task_judged($task) {
 				return true;
 			}
 			$finalgrade += $task->grade;
+			// do fault location only on the condition that code can be run, there are 4 testcases at least, and it can't be accepted
+			if(!in_array($task->status, Array(ONLINEJUDGE_STATUS_WRONG_ANSWER, ONLINEJUDGE_STATUS_ACCEPTED, ONLINEJUDGE_STATUS_PRESENTATION_ERROR))) {
+				$judge = false;
+			}
+			if ($task->status == ONLINEJUDGE_STATUS_WRONG_ANSWER) {
+				$faultlocation = true;
+			}
+			$cmid = $task->cmid;
+			$inputs [] = $oj->input;
+			$outputs [] = $oj->output;
 		}
 	}
-	
+// 	if(count($onlinejudges) < 4) 
+// 		$judge = false;
+	// Fault Location use soap
+	if (!isset($judge) && $faultlocation) {
+		$fs = get_file_storage ();
+		$context = get_context_instance ( CONTEXT_MODULE, $cmid );
+		if ($files = $fs->get_area_files ( $context->id, 'mod_assignment', 'submission', $submission->id, "timemodified", false )) {
+			$value = current ( $files );
+			if ($value instanceof stored_file) {
+				$code = $value->get_content ();
+			}
+		}
+		if ((! empty ( $inputs )) && (! empty ( $outputs )) && (! empty ( $code ))) {
+			$tmp = faultlocation ( $inputs, $outputs, $code );
+			$faultinfo = trim($tmp);
+			if(!empty($faultinfo)) {
+				$prefix = "<b>逻辑错误定位结果（排名\\概率\\错误位置)</b><br/><hr style='border=1px solid #D3D3D3'/>";
+				$submission->submissioncomment = $prefix .$faultinfo;
+			}
+		}
+	}
 	$submission->grade = $finalgrade;
 	$submission->timemarked = time ();
 	$submission->mailed = 1; // do not notify student by mail
