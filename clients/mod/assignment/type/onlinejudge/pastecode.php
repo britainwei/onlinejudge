@@ -24,7 +24,6 @@
  * @copyright 2015 britainwei <britainwei@163.com>
  */
 require_once (dirname ( dirname ( dirname ( dirname ( dirname ( __FILE__ ) ) ) ) ) . '/config.php');
-// require_once (dirname ( __FILE__ ) . '/assignment.class.php');
 require_once ($CFG->dirroot . "/mod/assignment/type/onlinejudge/assignment.class.php");
 global $PAGE, $OUTPUT, $DB, $CFG;
 

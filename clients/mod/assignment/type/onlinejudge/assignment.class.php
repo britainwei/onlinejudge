@@ -465,6 +465,10 @@ class assignment_onlinejudge extends assignment_upload {
 			echo "<br/><label>" . get_string ( 'codelanguage', 'assignment_onlinejudge' ) . ": </label>";
 			echo " <select style='width:100px' name='codelanguage'>";
 			echo " <option value='c' selected>C</option>";
+			echo " <option value='cpp'>C++</option>";
+			echo " <option value='cs'>C#</option>";
+			echo " <option value='java'>Java</option>";
+			echo " <option value='py'>Python</option>";
 			echo " </select><br/>";
 			echo "<textarea name='pastecode' style='resize:none;height:300px;width:90%;'>";
 			if (isset ( $code )) {
@@ -1047,7 +1051,11 @@ function onlinejudge_task_judged($task) {
 			}
 			$finalgrade += $task->grade;
 			// do fault location only on the condition that code can be run, there are 4 testcases at least, and it can't be accepted
-			if(!in_array($task->status, Array(ONLINEJUDGE_STATUS_WRONG_ANSWER, ONLINEJUDGE_STATUS_ACCEPTED, ONLINEJUDGE_STATUS_PRESENTATION_ERROR))) {
+			if (! in_array ( $task->status, Array (
+					ONLINEJUDGE_STATUS_WRONG_ANSWER,
+					ONLINEJUDGE_STATUS_ACCEPTED,
+					ONLINEJUDGE_STATUS_PRESENTATION_ERROR 
+			) )) {
 				$judge = false;
 			}
 			if ($task->status == ONLINEJUDGE_STATUS_WRONG_ANSWER) {
@@ -1058,24 +1066,27 @@ function onlinejudge_task_judged($task) {
 			$outputs [] = $oj->output;
 		}
 	}
-// 	if(count($onlinejudges) < 4) 
-// 		$judge = false;
+	// if(count($onlinejudges) < 4)
+	// $judge = false;
 	// Fault Location use soap
-	if (!isset($judge) && $faultlocation) {
+	if (! isset ( $judge ) && $faultlocation) {
 		$fs = get_file_storage ();
 		$context = get_context_instance ( CONTEXT_MODULE, $cmid );
 		if ($files = $fs->get_area_files ( $context->id, 'mod_assignment', 'submission', $submission->id, "timemodified", false )) {
 			$value = current ( $files );
+			
 			if ($value instanceof stored_file) {
-				$code = $value->get_content ();
+				if (preg_match ( "/\.c$/", $value->get_filename () )) { // whether c program code or not
+					$code = $value->get_content ();
+				}
 			}
 		}
 		if ((! empty ( $inputs )) && (! empty ( $outputs )) && (! empty ( $code ))) {
 			$tmp = faultlocation ( $inputs, $outputs, $code );
-			$faultinfo = trim($tmp);
-			if(!empty($faultinfo)) {
+			$faultinfo = trim ( $tmp );
+			if (! empty ( $faultinfo )) {
 				$prefix = "<b>逻辑错误定位结果（排名\\概率\\错误位置)</b><br/><hr style='border=1px solid #D3D3D3'/>";
-				$submission->submissioncomment = $prefix .$faultinfo;
+				$submission->submissioncomment = $prefix . $faultinfo;
 			}
 		}
 	}

@@ -479,7 +479,9 @@ function onlinejudge_clean_temp_dir($content_only = true) {
 }
 
 /**
- * check whether judge directlyoutput or not.
+ * if the assignment that cantain the task has set the 
+ * directly output info, then chek it.
+ * Or do not check directly output.
  *
  * @param string $taskid
  *        	id of task.
@@ -519,6 +521,7 @@ function onlinejudge_is_direct_output($taskid) {
 		$source = $file->get_content ();
 		break;
 	}
+	// delete all the unuseful code line
 	if (isset ( $source )) {
 		$reg = "/\/\*(.*?)\*\//s"; // C programe language annotation /** ... */
 		$content = preg_replace ( $reg, "", $source );
