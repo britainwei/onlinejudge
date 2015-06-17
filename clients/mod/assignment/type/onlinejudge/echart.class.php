@@ -47,6 +47,7 @@ class Echarts {
 								break;
 						}
 					}
+					$xaxis[] = 'axisLabel : { show : true, interval : 0, rotate : -15, margin : 8}';
 					$xaxis = '{' . implode ( ', ', $xaxis ) . '}';
 					break;
 				
